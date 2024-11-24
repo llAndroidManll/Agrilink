@@ -1,4 +1,4 @@
-package com.app.agrilink.ui.theme
+package com.app.agrilink.shared.compose.style
 
 import androidx.compose.ui.graphics.Color
 
