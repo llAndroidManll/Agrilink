@@ -4,4 +4,5 @@ sealed class NavigationScreens(
     val route: String,
 ) {
     data object HomeScreen : NavigationScreens("home_screen")
+    data object SignIn : NavigationScreens("sign_in")
 }

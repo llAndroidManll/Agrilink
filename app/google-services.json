@@ -12,7 +12,20 @@
           "package_name": "com.app.agrilink"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "966857531043-idbhl7isgdkckhopu8d1t0qh4o3tf0qc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.agrilink",
+            "certificate_hash": "f1191e71ea87e12d4fc8114c30f6aa10e904573a"
+          }
+        },
+        {
+          "client_id": "966857531043-hrtfsqt6q4rovubr35dpsa1c5fv2lmgd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBG8koPANLs7OjVOZ95NJB7OcHZvuoRjyk"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966857531043-hrtfsqt6q4rovubr35dpsa1c5fv2lmgd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
