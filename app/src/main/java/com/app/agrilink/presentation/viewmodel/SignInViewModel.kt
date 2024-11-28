@@ -10,9 +10,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-@HiltViewModel
-class SignInViewModel(
+/*@HiltViewModel
+class SignInViewModel @Inject constructor(
+    private val googleAuthUiClient: GoogleAuthUiClient
+) : ViewModel() {*/
+class SignInViewModel constructor(
     private val googleAuthUiClient: GoogleAuthUiClient
 ) : ViewModel() {
 

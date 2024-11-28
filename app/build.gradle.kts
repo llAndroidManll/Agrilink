@@ -74,8 +74,8 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.0.0")
 
     // Hilt for dependency injection
-    implementation("com.google.dagger:hilt-android:2.44")
-    kapt("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
     // Hilt ViewModel
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
