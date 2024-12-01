@@ -10,9 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,7 +17,7 @@ import androidx.navigation.compose.composable
 import com.app.agrilink.data.auth.GoogleAuthUiClient
 import com.app.agrilink.data.mappers.toUserData
 import com.app.agrilink.domain.data.UserData
-import com.app.agrilink.presentation.state.CustomResult
+import com.app.agrilink.presentation.state.CustomState
 import com.app.agrilink.presentation.ui.sign_in.SignInScreen
 import com.app.agrilink.presentation.viewmodel.SignInViewModel
 import com.google.android.gms.auth.api.identity.Identity
@@ -65,7 +62,7 @@ fun AppNavHost(
                             )
 
                             signInViewModel.onSignInResult(
-                                CustomResult<UserData>(
+                                CustomState<UserData>(
                                     data = signInResult.toUserData(),
                                 )
                             )
@@ -74,8 +71,8 @@ fun AppNavHost(
                 }
             )
 
-            LaunchedEffect(key1 = state.isSignInSuccessful) {
-                if(state.isSignInSuccessful) {
+            LaunchedEffect(key1 = state.isSuccessful) {
+                if(state.isSuccessful) {
                     Toast.makeText(
                         context,
                         "Sign in successful",

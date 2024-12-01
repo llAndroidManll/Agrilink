@@ -13,20 +13,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.app.agrilink.domain.data.UserData
 import com.app.agrilink.presentation.state.CustomState
-import com.app.agrilink.presentation.state.SignInState
 
 @Composable
 fun SignInScreen(
-    state: SignInState = SignInState(),
+    state: CustomState<Any> = CustomState<Any>( data = null),
     onSignInClick: () -> Unit
 ) {
     val context = LocalContext.current
 
     // Show error message if any
-    LaunchedEffect(key1 = state.signInError) {
-        state.signInError?.let { error ->
+    LaunchedEffect(key1 = state.error) {
+        state.error.let { error ->
             Toast.makeText(
                 context,
                 error,
