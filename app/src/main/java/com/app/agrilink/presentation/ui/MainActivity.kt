@@ -17,7 +17,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navController = rememberNavController()
             AgrilinkTheme{
-                AppNavHost(navController = navController)
+                AppNavHost(
+                    navController = navController,
+                    context = applicationContext
+                )
             }
         }
     }

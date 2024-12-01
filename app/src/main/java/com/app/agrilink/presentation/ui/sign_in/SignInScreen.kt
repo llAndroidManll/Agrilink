@@ -15,18 +15,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.app.agrilink.domain.data.UserData
 import com.app.agrilink.presentation.state.CustomState
+import com.app.agrilink.presentation.state.SignInState
 
 @Composable
 fun SignInScreen(
-    state: CustomState<UserData>,
+    state: SignInState = SignInState(),
     onSignInClick: () -> Unit
 ) {
     val context = LocalContext.current
 
     // Show error message if any
-    LaunchedEffect(key1 = state.error) {
-        state.error?.let { error ->
-            Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+    LaunchedEffect(key1 = state.signInError) {
+        state.signInError?.let { error ->
+            Toast.makeText(
+                context,
+                error,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -36,12 +41,8 @@ fun SignInScreen(
             .padding(16.dp),
         contentAlignment = Alignment.Center
     ) {
-        if (state.isLoading) {
-            Text("Signing in...")
-        } else {
-            Button(onClick = onSignInClick) {
-                Text(text = "Sign in")
-            }
+        Button(onClick = onSignInClick) {
+            Text(text = "Sign in")
         }
     }
 }

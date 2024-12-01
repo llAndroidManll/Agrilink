@@ -5,12 +5,14 @@ import android.content.Intent
 import android.content.IntentSender
 import com.app.agrilink.R
 import com.app.agrilink.data.entity.SignInDto
+import com.app.agrilink.domain.data.UserData
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+import kotlin.coroutines.cancellation.CancellationException
 
 class GoogleAuthUiClient(
     private val context: Context,
@@ -51,6 +53,24 @@ class GoogleAuthUiClient(
                 errorMessage = e.message
             )
         }
+    }
+
+    suspend fun signOut() {
+        try {
+            oneTapClient.signOut().await()
+            auth.signOut()
+        } catch(e: Exception) {
+            e.printStackTrace()
+            if(e is CancellationException) throw e
+        }
+    }
+
+    fun getSignedInUser(): UserData? = auth.currentUser?.run {
+        UserData(
+            userId = uid,
+            username = displayName,
+            profilePictureUrl = photoUrl?.toString()
+        )
     }
 
     private fun buildSignInRequest(): BeginSignInRequest {
