@@ -1,7 +1,7 @@
 package com.app.agrilink.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.app.agrilink.data.auth.SignInDto
+import com.app.agrilink.data.entity.SignInDto
 import com.app.agrilink.presentation.state.CustomState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

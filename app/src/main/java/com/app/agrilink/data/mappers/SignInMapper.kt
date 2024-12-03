@@ -1,6 +1,6 @@
 package com.app.agrilink.data.mappers
 
-import com.app.agrilink.data.auth.SignInDto
+import com.app.agrilink.data.entity.SignInDto
 import com.app.agrilink.domain.data.UserData
 
 fun SignInDto.toUserData(): UserData? {

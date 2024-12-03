@@ -1,4 +1,4 @@
-package com.app.agrilink.data.auth
+package com.app.agrilink.data.entity
 
 data class SignInDto(
     val userId: String? = null,
