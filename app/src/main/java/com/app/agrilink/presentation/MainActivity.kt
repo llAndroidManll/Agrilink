@@ -1,4 +1,4 @@
-package com.app.agrilink.presentation.ui
+package com.app.agrilink.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

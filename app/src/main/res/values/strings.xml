@@ -1,4 +1,27 @@
 <resources>
     <string name="app_name">Agrilink</string>
     <string name="web_client_id">966857531043-hrtfsqt6q4rovubr35dpsa1c5fv2lmgd.apps.googleusercontent.com</string>
+    <string name="empty_string" />
+
+    <!--   PlaceHolderState.Empty -->
+    <string name="state_empty_title">Ничего не найдено</string>
+    <string name="state_empty_subtitle">Попробуйте изменить свой запрос</string>
+    <string name="state_empty_btn">@string/empty_string</string>
+
+    <!--   PlaceHolderState.NotFound -->
+    <string name="state_not_found_title">@string/state_empty_title</string>
+    <string name="state_not_found_subtitle">Попробуйте написать свой запрос другими словами</string>
+    <string name="state_not_found_btn">@string/empty_string</string>
+
+    <!--   PlaceHolderState.Error -->
+    <string name="state_error_title">Что-то пошло не так</string>
+    <string name="state_error_subtitle">Не удалось загрузить данные, попробуйте\nповторить попытку позже</string>
+    <string name="state_error_btn">Повторить</string>
+
+    <!--   PlaceHolderState.NoInternet -->
+    <string name="state_no_internet_title">Нет соединения</string>
+    <string name="state_no_internet_subtitle">Проверьте соединение с интернетом\nи попробуйте позже</string>
+    <string name="state_no_internet_btn">@string/state_error_btn</string>
+
+    <string name="text_select_city">Выбрать город</string>
 </resources>

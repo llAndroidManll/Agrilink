@@ -1,4 +1,4 @@
-package com.app.agrilink.presentation.state
+package com.app.agrilink.shared.compose.state
 
 data class CustomState<T>(
     val data: T? = null,

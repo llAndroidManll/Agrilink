@@ -16,9 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.app.agrilink.data.auth.GoogleAuthUiClient
 import com.app.agrilink.data.entity.SignInDto
-import com.app.agrilink.presentation.state.CustomState
-import com.app.agrilink.presentation.ui.sign_in.SignInScreen
-import com.app.agrilink.presentation.viewmodel.SignInViewModel
+import com.app.agrilink.shared.compose.state.CustomState
+import com.app.agrilink.presentation.screens.sign_in.SignInScreen
+import com.app.agrilink.presentation.screens.sign_in.SignInViewModel
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 

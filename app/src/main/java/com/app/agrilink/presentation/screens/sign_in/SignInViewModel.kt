@@ -1,8 +1,8 @@
-package com.app.agrilink.presentation.viewmodel
+package com.app.agrilink.presentation.screens.sign_in
 
 import androidx.lifecycle.ViewModel
 import com.app.agrilink.data.entity.SignInDto
-import com.app.agrilink.presentation.state.CustomState
+import com.app.agrilink.shared.compose.state.CustomState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

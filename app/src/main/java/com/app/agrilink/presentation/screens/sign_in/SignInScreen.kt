@@ -1,4 +1,4 @@
-package com.app.agrilink.presentation.ui.sign_in
+package com.app.agrilink.presentation.screens.sign_in
 
 
 import android.widget.Toast
@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.app.agrilink.presentation.state.CustomState
+import com.app.agrilink.shared.compose.state.CustomState
 
 @Composable
 fun SignInScreen(
