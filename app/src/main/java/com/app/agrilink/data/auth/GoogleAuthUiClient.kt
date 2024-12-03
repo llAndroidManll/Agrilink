@@ -4,8 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import com.app.agrilink.R
-import com.app.agrilink.data.entity.SignInDto
-import com.app.agrilink.domain.data.UserData
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.GoogleAuthProvider
@@ -65,8 +63,8 @@ class GoogleAuthUiClient(
         }
     }
 
-    fun getSignedInUser(): UserData? = auth.currentUser?.run {
-        UserData(
+    fun getSignedInUser(): SignInDto? = auth.currentUser?.run {
+        SignInDto(
             userId = uid,
             username = displayName,
             profilePictureUrl = photoUrl?.toString()

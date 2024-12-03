@@ -15,8 +15,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.app.agrilink.data.auth.GoogleAuthUiClient
-import com.app.agrilink.data.mappers.toUserData
-import com.app.agrilink.domain.data.UserData
+import com.app.agrilink.data.auth.SignInDto
 import com.app.agrilink.presentation.state.CustomState
 import com.app.agrilink.presentation.ui.sign_in.SignInScreen
 import com.app.agrilink.presentation.viewmodel.SignInViewModel
@@ -62,8 +61,8 @@ fun AppNavHost(
                             )
 
                             signInViewModel.onSignInResult(
-                                CustomState<UserData>(
-                                    data = signInResult.toUserData(),
+                                CustomState<SignInDto>(
+                                    data = signInResult,
                                 )
                             )
                         }
