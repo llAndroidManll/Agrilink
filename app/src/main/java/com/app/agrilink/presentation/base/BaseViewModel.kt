@@ -1,10 +1,10 @@
+package com.app.agrilink.presentation.base
+
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.lifecycle.viewModelScope
-import com.app.agrilink.presentation.base.BaseEvent
-import com.app.agrilink.presentation.base.BaseScreenState
 import com.app.agrilink.shared.util.launchWithCatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
