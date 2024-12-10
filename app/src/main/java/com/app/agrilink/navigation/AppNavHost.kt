@@ -10,16 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.app.agrilink.data.auth.GoogleAuthUiClient
-import com.app.agrilink.data.entity.SignInDto
 import com.app.agrilink.shared.compose.state.CustomState
-import com.app.agrilink.presentation.screens.sign_in.SignInScreen
+import com.app.agrilink.presentation.screens.sign_in.SignUpScreen
 import com.app.agrilink.presentation.screens.sign_in.SignInViewModel
-import com.google.android.gms.auth.api.identity.Identity
+import com.app.agrilink.presentation.screens.welcome.WelcomeScreen
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -29,18 +30,25 @@ fun AppNavHost(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
+    val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
 
-    NavHost(navController = navController, startDestination = NavigationScreens.SignIn.route) {
+    NavHost(navController = navController, startDestination = NavigationScreens.Welcome.route) {
+
+        composable(NavigationScreens.Welcome.route) {
+            WelcomeScreen()
+            LaunchedEffect(
+                key1 = lifecycleScope
+            ) {
+                delay(1000)
+                navController.navigate(NavigationScreens.SignIn.route)
+            }
+        }
 
         composable(NavigationScreens.SignIn.route) {
-            val signInViewModel: SignInViewModel = viewModel()
 
-            val googleAuthUiClient by lazy {
-                GoogleAuthUiClient(
-                    context = context,
-                    oneTapClient = Identity.getSignInClient(context)
-                )
-            }
+            val signInViewModel: SignInViewModel = hiltViewModel()
+
+            val googleAuthUiClient = signInViewModel.getGoogleAuthUiClient()
 
             val signInState = signInViewModel.state.collectAsState()
             val state = signInState.value
@@ -59,9 +67,8 @@ fun AppNavHost(
                             val signInResult = googleAuthUiClient.signInWithIntent(
                                 intent = result.data ?: return@launch
                             )
-
                             signInViewModel.onSignInResult(
-                                CustomState<SignInDto>(
+                                CustomState(
                                     data = signInResult,
                                 )
                             )
@@ -82,7 +89,7 @@ fun AppNavHost(
                 }
             }
 
-            SignInScreen(
+            SignUpScreen(
                 state = state,
                 onSignInClick = {
                     coroutineScope.launch {

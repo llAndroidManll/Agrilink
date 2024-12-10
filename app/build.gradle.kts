@@ -100,6 +100,7 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class-android:1.3.1")
 
     implementation("com.google.firebase:firebase-auth:23.1.0")
+    implementation("androidx.compose.material:material-icons-extended:1.7.5")
 }
 
 kapt {

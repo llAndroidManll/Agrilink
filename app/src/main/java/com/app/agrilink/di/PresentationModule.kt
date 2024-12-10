@@ -13,7 +13,6 @@ import com.google.android.gms.auth.api.identity.Identity
 @InstallIn(SingletonComponent::class)
 object PresentationModule {
 
-
     @Provides
     fun provideGoogleAuthUiClient(
         @ApplicationContext context: Context
@@ -23,5 +22,4 @@ object PresentationModule {
             oneTapClient = Identity.getSignInClient(context)
         )
     }
-
 }

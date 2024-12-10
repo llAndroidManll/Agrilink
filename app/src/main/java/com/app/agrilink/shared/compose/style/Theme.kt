@@ -21,13 +21,13 @@ import androidx.core.view.WindowCompat
 import com.app.agrilink.presentation.MainActivity
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+    primary = Green,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
+    primary = Green,
     secondary = PurpleGrey40,
     tertiary = Pink40
 )
