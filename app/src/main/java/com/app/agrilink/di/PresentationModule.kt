@@ -8,12 +8,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import com.google.android.gms.auth.api.identity.Identity
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object PresentationModule {
 
     @Provides
+    @Singleton
     fun provideGoogleAuthUiClient(
         @ApplicationContext context: Context
     ): GoogleAuthUiClient {
