@@ -69,7 +69,6 @@ fun SignUpScreen(
 
     val context = LocalContext.current
 
-
     val firstName = remember {
         mutableStateOf("")
     }

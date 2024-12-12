@@ -9,7 +9,7 @@ sealed class BaseScreenState<out T> {
     /**
      * Состояние загрузки, указывающее на то, что данные в процессе получения.
      */
-    object Loading : BaseScreenState<Nothing>()
+    data object Loading : BaseScreenState<Nothing>()
 
     /**
      * Состояние, представляющее успешно полученные данные.

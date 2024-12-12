@@ -102,6 +102,10 @@ dependencies {
 
     implementation("com.google.firebase:firebase-auth:23.1.0")
     implementation("androidx.compose.material:material-icons-extended:1.7.5")
+
+
+    // DataStore for sharing preferences across app instances
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
 }
 
 kapt {
