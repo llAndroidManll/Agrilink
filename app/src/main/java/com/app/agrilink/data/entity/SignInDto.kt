@@ -2,6 +2,7 @@ package com.app.agrilink.data.entity
 
 import com.app.agrilink.domain.mapper.Transformable
 import com.app.agrilink.domain.data.UserData
+import com.app.agrilink.presentation.dto.SignInUiModel
 import com.app.agrilink.shared.util.Constants.EMPTY_STRING
 
 data class SignInDto(
@@ -20,5 +21,14 @@ data class SignInDto(
         } else {
             null
         }
+    }
+
+    // TODO: Change or Clean up the this transformation logic
+    fun toUiModel(): SignInUiModel {
+        return SignInUiModel(
+            userId = userId ?: EMPTY_STRING,
+            username = username ?: EMPTY_STRING,
+            profilePictureUrl = profilePictureUrl ?: EMPTY_STRING
+        )
     }
 }

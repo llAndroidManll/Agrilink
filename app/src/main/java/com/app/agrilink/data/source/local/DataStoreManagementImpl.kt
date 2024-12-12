@@ -17,8 +17,6 @@ class DataStoreManagementImpl(
     companion object {
         private const val USER_DATA_KEY_VALUE = "UserDataKey"
         val USER_DATA_KEY = stringPreferencesKey(USER_DATA_KEY_VALUE)
-
-        //Avelacnum es keyer urish objectneri hamar ete anhrajesht a
     }
 
     override fun <T> getData(type: Class<T>, key: Preferences.Key<String>): Flow<T?> {
