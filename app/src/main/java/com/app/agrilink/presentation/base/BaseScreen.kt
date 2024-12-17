@@ -1,5 +1,7 @@
 package com.app.agrilink.presentation.base
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -12,9 +14,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import com.app.agrilink.shared.compose.state.FullScreenError
 import com.app.agrilink.shared.compose.state.FullScreenLoader
+import com.app.agrilink.shared.util.Constants.LOG_TAG
 
 /**
  * Основной метод для экранов Jetpack Compose, взаимодействующих с объектами BaseViewModel.
@@ -35,7 +39,7 @@ fun <DataState : BaseDataState> BaseScreen(
     useStatusBarPadding: Boolean = true,
     onBack: (() -> Unit)? = null,
     toolbar: @Composable ((data: DataState?, onBack: () -> Unit) -> Unit)? = null,
-    error: @Composable BoxScope.(data: DataState?, retryAction: () -> Unit) -> Unit = { _, retryAction -> FullScreenError { retryAction() } },
+    error: @Composable (BoxScope.(data: DataState?, retryAction: (() -> Unit)?) -> Unit)? = { _, retryAction -> FullScreenError { retryAction?.invoke() } },
     loader: @Composable (BoxScope.(isLoading: Boolean) -> Unit)? = { isLoading -> FullScreenLoader(isVisible = isLoading) },
     data: @Composable BoxScope.(data: DataState, isLoading: Boolean) -> Unit
 ) {
@@ -50,7 +54,7 @@ fun <DataState : BaseDataState> BaseScreen(
         }
     }
 
-    val state = remember(viewModel.state.value) { viewModel.state.value }
+    val state = remember(viewModel.baseState.value) { viewModel.baseState.value }
 
     Column(
         modifier = Modifier
@@ -76,7 +80,14 @@ fun <DataState : BaseDataState> BaseScreen(
         ) {
             when (state) {
                 is BaseScreenState.Error -> {
-                    error(state.getResultData(), state.retryAction)
+                    //В случай отсутствии Error view,
+                    // мы будем вызывать Toast для отображение error-ов
+                    if (error == null) {
+                        Log.d(LOG_TAG, state.reason.message ?: "Empty Error")
+                        Toast.makeText(LocalContext.current, state.reason.message, Toast.LENGTH_SHORT).show()
+                    } else {
+                        error(state.getResultData(), state.retryAction)
+                    }
                 }
 
                 is BaseScreenState.Loading -> {
@@ -84,10 +95,10 @@ fun <DataState : BaseDataState> BaseScreen(
                 }
 
                 else -> {
-                    viewModel.state.value.getResultData()?.let { stateData ->
+                    viewModel.baseState.value.getResultData()?.let { stateData ->
                         data(
                             stateData,
-                            viewModel.state.value is BaseScreenState.Loading
+                            viewModel.baseState.value is BaseScreenState.Loading
                         )
                     }
                 }

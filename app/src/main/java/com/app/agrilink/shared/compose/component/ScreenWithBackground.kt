@@ -1,4 +1,4 @@
-package com.app.agrilink.shared.compose.utils
+package com.app.agrilink.shared.compose.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

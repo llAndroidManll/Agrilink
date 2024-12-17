@@ -79,7 +79,7 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.51.1")
 
     // Hilt ViewModel
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.5.3")
@@ -100,7 +100,9 @@ dependencies {
     // Window Class Size
     implementation("androidx.compose.material3:material3-window-size-class-android:1.3.1")
 
-    implementation("com.google.firebase:firebase-auth:23.1.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-auth")
+
     implementation("androidx.compose.material:material-icons-extended:1.7.5")
 
 

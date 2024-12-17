@@ -3,8 +3,7 @@ package com.app.agrilink.data.source.local
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
-import com.app.agrilink.domain.repository.IDataStoreManagement
+import com.app.agrilink.domain.preferences.IDataStoreManagement
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -14,16 +13,19 @@ class DataStoreManagementImpl(
     private val gson: Gson,
 ) : IDataStoreManagement {
 
-    companion object {
-        private const val USER_DATA_KEY_VALUE = "UserDataKey"
-        val USER_DATA_KEY = stringPreferencesKey(USER_DATA_KEY_VALUE)
-
-        //Avelacnum es keyer urish objectneri hamar ete anhrajesht a
-    }
-
     override fun <T> getData(type: Class<T>, key: Preferences.Key<String>): Flow<T?> {
         return dataStore.data.map { preferences ->
-            gson.fromJson(preferences[key], type)
+            val json = preferences[key]
+            if (json.isNullOrEmpty()) {
+                null
+            } else {
+                try {
+                    gson.fromJson(json, type)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
+                }
+            }
         }
     }
 

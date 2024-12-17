@@ -5,6 +5,10 @@ import android.content.Intent
 import android.content.IntentSender
 import com.app.agrilink.R
 import com.app.agrilink.data.entity.SignInDto
+import com.app.agrilink.domain.data.OnAuth
+import com.app.agrilink.domain.data.UserData
+import com.app.agrilink.shared.util.Constants.EMPTY_STRING
+import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.GoogleAuthProvider
@@ -31,36 +35,30 @@ class GoogleAuthUiClient(
         return result?.pendingIntent?.intentSender
     }
 
-    suspend fun signInWithIntent(intent: Intent): SignInDto {
+    suspend fun signInWithIntent(intent: Intent): UserData {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken
         val googleCredentials = GoogleAuthProvider.getCredential(googleIdToken, null)
-        return try {
-            val user = auth.signInWithCredential(googleCredentials).await().user
-            SignInDto(
-                userId = user?.uid,
-                username = user?.displayName,
-                profilePictureUrl = user?.photoUrl?.toString(),
-                errorMessage = null
-            )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            SignInDto(
-                userId = null,
-                username = null,
-                profilePictureUrl = null,
-                errorMessage = e.message
+
+        val user = auth.signInWithCredential(googleCredentials).await().user
+        if (user == null) throw Exception("User object null from google auth response")
+        else {
+            return UserData(
+                userId = user.uid,
+                username = user.displayName ?: EMPTY_STRING,
+                profilePictureUrl = user.photoUrl?.toString() ?: EMPTY_STRING,
             )
         }
+
     }
 
     suspend fun signOut() {
         try {
             oneTapClient.signOut().await()
             auth.signOut()
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             e.printStackTrace()
-            if(e is CancellationException) throw e
+            if (e is CancellationException) throw e
         }
     }
 

@@ -1,8 +1,12 @@
 package com.app.agrilink.presentation.screens.sign_in
 
 
+import android.app.Activity.RESULT_OK
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,8 +33,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -44,9 +46,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.app.agrilink.R
-import com.app.agrilink.data.entity.SignInDto
-import com.app.agrilink.shared.compose.state.CustomState
+import com.app.agrilink.presentation.base.BaseScreen
 import com.app.agrilink.shared.compose.style.BoldGray
 import com.app.agrilink.shared.compose.style.Gray
 import com.app.agrilink.shared.compose.style.Green
@@ -56,58 +59,41 @@ import com.app.agrilink.shared.compose.style.dimens
 import com.app.agrilink.shared.compose.utils.ButtonStyle
 import com.app.agrilink.shared.compose.utils.CustomTextField
 import com.app.agrilink.shared.compose.utils.LoadingScreen
-import com.app.agrilink.shared.compose.utils.ScreenWithBackground
+import com.app.agrilink.shared.compose.component.ScreenWithBackground
 import com.app.agrilink.shared.compose.utils.SpacerHeight
+import com.app.agrilink.shared.compose.utils.validateForm
 import com.app.agrilink.shared.util.Constants.LOG_TAG
 
 @Composable
-fun SignUpScreen(
-    state: CustomState<SignInDto> = CustomState(data = SignInDto()),
-    onSignInClick: () -> Unit = {},
+fun AuthScreen(
+    navHostController: NavHostController,
+    viewModel: AuthViewModel = createAuthViewModel(navHostController),
     onLoginTextClick: () -> Unit = {}
 ) {
+    BaseScreen(
+        viewModel = viewModel,
+        error = null
+    ) { state, loading ->
+        val context = LocalContext.current
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartIntentSenderForResult(),
+            onResult = { result ->
+                val data = result.data
+                if (result.resultCode == RESULT_OK && data != null) {
+                    viewModel.onUIEvent(AuthEvents.Inputs.OnAuthUserSelected(data))
+                }
+            }
+        )
 
-    val context = LocalContext.current
-
-    val firstName = remember {
-        mutableStateOf("")
-    }
-
-    val lastName = remember {
-        mutableStateOf("")
-    }
-
-    val email = remember {
-        mutableStateOf("")
-    }
-
-    val password = remember {
-        mutableStateOf("")
-    }
-
-    val passwordRepeat = remember {
-        mutableStateOf("")
-    }
-
-    val isPasswordVisible = remember { mutableStateOf(false) }
-    val isPasswordRepeatVisible = remember { mutableStateOf(false) }
-    val passwordError = remember { mutableStateOf("") }
-    val passwordMatchError = remember { mutableStateOf("") }
-
-    LaunchedEffect(key1 = state.error) {
-        state.error?.let {
-            Log.d(LOG_TAG, "Sign In Screen error")
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+        LaunchedEffect(key1 = state.intentSender) {
+            launcher.launch(
+                IntentSenderRequest.Builder(
+                    state.intentSender ?: return@LaunchedEffect
+                ).build()
+            )
         }
-    }
-
-
-    if (state.isLoading) {
-        LoadingScreen()
-    } else {
 
         ScreenWithBackground {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -134,30 +120,32 @@ fun SignUpScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     CustomTextField(
-                        value = firstName.value,
+                        value = state.firstName,
                         onValueChange = {
                             if (it.matches(Regex("^[a-zA-Z]*$"))) {
-                                firstName.value = it
+                                viewModel.onUIEvent(AuthEvents.Inputs.OnFirstNameChanged(it))
                             }
                         },
                         labelValue = stringResource(R.string.first_name),
                         shape = RoundedCornerShape(20),
                     )
+
                     CustomTextField(
-                        value = lastName.value,
+                        value = state.lastName,
                         onValueChange = {
                             if (it.matches(Regex("^[a-zA-Z]*$"))) {
-                                lastName.value = it
+                                viewModel.onUIEvent(AuthEvents.Inputs.OnLastNameChanged(it))
                             }
                         },
                         labelValue = stringResource(R.string.last_name),
                         shape = RoundedCornerShape(20),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri),
                     )
+
                     CustomTextField(
-                        value = email.value,
+                        value = state.email,
                         onValueChange = {
-                            email.value = it
+                            viewModel.onUIEvent(AuthEvents.Inputs.OnEmailChanged(it))
                         },
                         labelValue = stringResource(R.string.email),
                         shape = RoundedCornerShape(20),
@@ -166,30 +154,31 @@ fun SignUpScreen(
 
                     // Password
                     CustomTextField(
-                        value = password.value,
+                        value = state.password,
                         onValueChange = {
-                            password.value = it
-                            passwordError.value = validatePassword(it)
+                            viewModel.onUIEvent(AuthEvents.Inputs.OnPasswordChanged(it))
+                            //Todo teghapoxi clickic heto kam viewModel
+                            //passwordError.value = validatePassword(it)
                         },
                         labelValue = "Password",
                         shape = RoundedCornerShape(20),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        visualTransformation = if (isPasswordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (state.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             IconButton(onClick = {
-                                isPasswordVisible.value = !isPasswordVisible.value
+                                viewModel.onUIEvent(AuthEvents.Inputs.ChangePasswordVisibility)
                             }) {
                                 Icon(
-                                    imageVector = if (isPasswordVisible.value) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = if (isPasswordVisible.value) "Hide Password" else "Show Password"
+                                    imageVector = if (state.isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    contentDescription = if (state.isPasswordVisible) "Hide Password" else "Show Password"
                                 )
                             }
                         }
                     )
 
-                    if (passwordError.value.isNotEmpty()) {
+                    if (state.passwordInputError.isNotEmpty()) {
                         Text(
-                            text = passwordError.value,
+                            text = state.passwordInputError,
                             color = Color.Red,
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -197,31 +186,33 @@ fun SignUpScreen(
 
                     // Confirm Password
                     CustomTextField(
-                        value = passwordRepeat.value,
+                        value = state.repeatPassword,
                         onValueChange = {
-                            passwordRepeat.value = it
-                            passwordMatchError.value =
-                                if (it != password.value) "Passwords do not match" else ""
+                            viewModel.onUIEvent(AuthEvents.Inputs.OnRepeatPasswordChanged(it))
+
+                            //Todo teghapoxi click-ic heto, kam el viewModel-um stugi
+                            /*passwordMatchError.value =
+                                if (it != password.value) "Passwords do not match" else ""*/
                         },
                         labelValue = "Confirm Password",
                         shape = RoundedCornerShape(20),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        visualTransformation = if (isPasswordRepeatVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
+                        visualTransformation = if (state.isRepeatPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                         trailingIcon = {
                             IconButton(onClick = {
-                                isPasswordRepeatVisible.value = !isPasswordRepeatVisible.value
+                                viewModel.onUIEvent(AuthEvents.Inputs.ChangeRepeatPasswordVisibility)
                             }) {
                                 Icon(
-                                    imageVector = if (isPasswordRepeatVisible.value) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                                    contentDescription = if (isPasswordRepeatVisible.value) "Hide Password" else "Show Password"
+                                    imageVector = if (state.isRepeatPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                    contentDescription = if (state.isRepeatPasswordVisible) "Hide Password" else "Show Password"
                                 )
                             }
                         }
                     )
 
-                    if (passwordMatchError.value.isNotEmpty()) {
+                    if (state.passwordMatchError.isNotEmpty()) {
                         Text(
-                            text = passwordMatchError.value,
+                            text = state.passwordMatchError,
                             color = Color.Red,
                             style = MaterialTheme.typography.bodySmall
                         )
@@ -233,14 +224,13 @@ fun SignUpScreen(
                 ButtonStyle(
                     text = stringResource(R.string.sign_up),
                     onClick = {
-                        if (validateForm(
-                                firstName = firstName.value,
-                                lastName = lastName.value,
-                                email = email.value,
-                                password = password.value,
-                                passwordRepeat = passwordRepeat.value,
-                                passwordError = passwordError.value,
-                                passwordMatchError = passwordMatchError.value
+                        if (
+                            validateForm(
+                                firstName = state.firstName,
+                                lastName = state.lastName,
+                                email = state.email,
+                                password = state.password,
+                                passwordRepeat = state.repeatPassword,
                             )
                         ) {
                             Log.d(LOG_TAG, "Form is valid. Proceed with sign-up.")
@@ -301,7 +291,9 @@ fun SignUpScreen(
                 SpacerHeight(MaterialTheme.dimens.small3)
 
                 IconButton(
-                    onClick = onSignInClick,
+                    onClick = {
+                        viewModel.onUIEvent(AuthEvents.Inputs.OnAuthGoogleClicked)
+                    },
                     modifier = Modifier
                         .border(1.dp, Color.Transparent, RoundedCornerShape(50))
                         .size(50.dp)
@@ -344,78 +336,21 @@ fun SignUpScreen(
                     )
                 }
             }
+
+            if (loading) LoadingScreen()
+
         }
     }
 }
 
-fun validatePassword(password: String): String {
-    return when {
-        password.length < 8 -> "Password must be at least 8 characters long"
-        !password.any { it.isUpperCase() } -> "Password must contain at least one uppercase letter"
-        !password.any { it.isLowerCase() } -> "Password must contain at least one lowercase letter"
-        !password.any { it.isDigit() } -> "Password must contain at least one number"
-        !password.any { !it.isLetterOrDigit() } -> "Password must contain at least one special character"
-        else -> ""
-    }
-}
-
-fun validateForm(
-    firstName: String,
-    lastName: String,
-    email: String,
-    password: String,
-    passwordRepeat: String,
-    passwordError: String,
-    passwordMatchError: String
-): Boolean {
-    return when {
-        firstName.isEmpty() -> {
-            Log.d(LOG_TAG, "First name is required.")
-            false
-        }
-
-        lastName.isEmpty() -> {
-            Log.d(LOG_TAG, "Last name is required.")
-            false
-        }
-
-        email.isEmpty() -> {
-            Log.d(LOG_TAG, "Email is required.")
-            false
-        }
-
-        !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches() -> {
-            Log.d(LOG_TAG, "Invalid email format.")
-            false
-        }
-
-        password.isEmpty() -> {
-            Log.d(LOG_TAG, "Password is required.")
-            false
-        }
-
-        passwordError.isNotEmpty() -> {
-            Log.d(LOG_TAG, "Password error: $passwordError")
-            false
-        }
-
-        passwordRepeat.isEmpty() -> {
-            Log.d(LOG_TAG, "Confirm password is required.")
-            false
-        }
-
-        passwordMatchError.isNotEmpty() -> {
-            Log.d(LOG_TAG, "Password match error: $passwordMatchError")
-            false
-        }
-
-        else -> true
-    }
-}
-
+@Composable
+private fun createAuthViewModel(navHostController: NavHostController) =
+    hiltViewModel<AuthViewModel, AuthViewModel.Factory>(creationCallback = { factory ->
+        factory.create(navHostController)
+    })
 
 @Preview(showBackground = true)
 @Composable
 fun SignInScreenPreview() {
-    SignUpScreen()
+    AuthScreen(navHostController = NavHostController(LocalContext.current))
 }

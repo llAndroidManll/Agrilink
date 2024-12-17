@@ -24,7 +24,7 @@ sealed class BaseScreenState<out T> {
      * @param reason Причина ошибки, представленная объектом [Throwable].
      * @param retryAction Лямбда-функция, которая будет вызвана для повторной попытки действия.
      */
-    data class Error(val reason: Throwable, val retryAction: () -> Unit) : BaseScreenState<Nothing>()
+    data class Error(val reason: Throwable, val retryAction: (() -> Unit)? = null) : BaseScreenState<Nothing>()
 
     /**
      * Метод для получения данных из состояния.
